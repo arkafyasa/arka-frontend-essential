@@ -13,6 +13,23 @@ class Meal{
             })
     }
 
+    static searchByKeywordFilterCategory(keyword, category){
+        return fetch(`http://www.themealdb.com/api/json/v1/1/search.php?s=${keyword}`)
+            .then(response => {
+                return response.json()
+            })
+            .then(responseJson => {
+                if(responseJson.meals) {
+                    responseJson.meals = responseJson.meals.filter((value, index, arr) => {
+                        return value.strCategory == category;
+                    });
+                    return Promise.resolve(responseJson.meals);
+                } else {
+                    return Promise.reject(`Makanan dengan kata kunci "${keyword}" tidak ditemukan`)
+                }
+            })
+    }
+
     static searchByIngredient(ingredient){
         return fetch(`http://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredient}`)
             .then(response => {
@@ -58,7 +75,7 @@ class Meal{
     }
 
     static getCategoryList(){
-        return fetch(`www.themealdb.com/api/json/v1/1/categories.php`)
+        return fetch(`http://www.themealdb.com/api/json/v1/1/categories.php`)
             .then(response => {
                 return response.json()
             })
